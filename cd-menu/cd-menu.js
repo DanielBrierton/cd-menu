@@ -197,10 +197,14 @@ window.cdMenu = function (options) {
           profilePic.style.backgroundImage = 'url(' + zenBase + '/api/2.0/profiles/' + userData.user.profileId + '/avatar_img)';
         });
         if (userData.user.initUserType.indexOf('attendee') === -1) {
-          each(parentLinks, showElement);
+          each(parentLinks, function (el) {
+            showElement(el);
+          });
         }
         if (userData.user.roles.indexOf('cdf-admin') !== -1) {
-          each(cdfAdminMenuLinks, showElement);
+          each(cdfAdminMenuLinks, function (el) {
+            showElement(el);
+          });
         }
         each(profiles, function (profile) {
           profile.style.display = 'flex';
@@ -212,7 +216,9 @@ window.cdMenu = function (options) {
           if (userDojos && userDojos.length > 0) {
             var isAllowed = canSeeELearningModule(userDojos);
             if (isAllowed) {
-              each(eLearningLinks, showElement);
+              each(eLearningLinks, function (el) {
+                showElement(el);
+              });
             }
           }
         });
