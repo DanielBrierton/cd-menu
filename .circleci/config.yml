@@ -1,0 +1,37 @@
+---
+version: 2
+jobs:
+  publish:
+    working_directory: ~/cd-common
+    docker:
+      - image: circleci/node:8
+    steps:
+      - add-ssh-keys:
+          fingerprints:
+            - "9d:cf:5c:b7:a7:c3:7c:b7:39:50:0b:eb:9c:f4:49:27"
+      - checkout
+      - run:
+          name: Setup .npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run:
+          name: Build
+          command: |
+            npm install
+            npm run build
+      - run:
+          name: Publish to NPM
+          command: |
+            git config --global user.email "webteam@coderdojo.com"
+            git config --global user.name "CoderDojo Foundation"
+            npm version patch -m "[skip ci] Update to %s"
+            git push
+            npm publish
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              only:
+                - master
